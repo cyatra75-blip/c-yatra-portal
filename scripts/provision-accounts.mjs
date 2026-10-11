@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import dotenv from 'dotenv';
 import path from 'path';
+import ws from 'ws';
 
 dotenv.config({ path: path.resolve(process.cwd(), '.env.local') });
 dotenv.config();
@@ -15,6 +16,7 @@ if (!supabaseUrl || !serviceRoleKey || supabaseUrl.includes('placeholder')) {
 
 const supabase = createClient(supabaseUrl, serviceRoleKey, {
   auth: { autoRefreshToken: false, persistSession: false },
+  realtime: { transport: ws },
 });
 
 async function provisionUser(email, password, role, fullName) {

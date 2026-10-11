@@ -116,13 +116,13 @@ Configure your initial credentials and secret:
 # Session Cookie Signing Secret (at least 32 characters)
 SESSION_SECRET=c-yatra-secure-session-signing-key-32-chars-long
 
-# Initial Default Credentials
+# Initial Private Account Credentials
 INITIAL_OWNER_EMAIL=owner@cyatra.com
-INITIAL_OWNER_PASSWORD=Owner@123
+INITIAL_OWNER_PASSWORD=your-secure-owner-password
 INITIAL_ADMIN_EMAIL=admin@cyatra.com
-INITIAL_ADMIN_PASSWORD=Admin@123
+INITIAL_ADMIN_PASSWORD=your-secure-admin-password
 
-# Optional: Remote Supabase Connection
+# Remote Supabase Connection
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
 SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key
@@ -137,11 +137,9 @@ npm run dev
 Open [http://localhost:3000](http://localhost:3000).
 
 - **Owner Login**: [http://localhost:3000/login](http://localhost:3000/login)
-  - Default Email: `owner@cyatra.com`
-  - Default Password: `Owner@123`
+  - Configured via `INITIAL_OWNER_EMAIL` and `INITIAL_OWNER_PASSWORD`
 - **Admin Login**: [http://localhost:3000/admin/login](http://localhost:3000/admin/login)
-  - Default Email: `admin@cyatra.com`
-  - Default Password: `Admin@123`
+  - Configured via `INITIAL_ADMIN_EMAIL` and `INITIAL_ADMIN_PASSWORD`
 
 ---
 

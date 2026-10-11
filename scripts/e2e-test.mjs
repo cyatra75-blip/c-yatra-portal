@@ -1,6 +1,15 @@
 import assert from 'assert';
+import dotenv from 'dotenv';
+import path from 'path';
 
-const BASE_URL = 'http://localhost:3005';
+dotenv.config({ path: path.resolve(process.cwd(), '.env.local') });
+dotenv.config();
+
+const BASE_URL = process.env.BASE_URL || 'http://localhost:3005';
+const OWNER_EMAIL = process.env.INITIAL_OWNER_EMAIL || 'owner@cyatra.com';
+const OWNER_PASSWORD = process.env.INITIAL_OWNER_PASSWORD || 'Owner@123';
+const ADMIN_EMAIL = process.env.INITIAL_ADMIN_EMAIL || 'admin@cyatra.com';
+const ADMIN_PASSWORD = process.env.INITIAL_ADMIN_PASSWORD || 'Admin@123';
 
 console.log('🚀 Running Full E2E Integration Test Suite against C-Yatra Server...\n');
 
@@ -60,6 +69,14 @@ async function run() {
     assert(location.includes('/admin/login'), `Expected redirect to /admin/login, got ${location}`);
   });
 
+function extractSessionCookie(res) {
+  const cookies = res.headers.getSetCookie ? res.headers.getSetCookie() : [res.headers.get('set-cookie') || ''];
+  const session = cookies.find((c) => c.includes('cyatra_session='));
+  if (!session) return '';
+  const match = session.match(/cyatra_session=[^;]+/);
+  return match ? match[0] : '';
+}
+
   // Test 2: Owner Login
   let ownerCookie = '';
   await test('Auth: Owner login succeeds and returns session cookie', async () => {
@@ -67,8 +84,8 @@ async function run() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        email: 'owner@cyatra.com',
-        password: 'Owner@123',
+        email: OWNER_EMAIL,
+        password: OWNER_PASSWORD,
         portalType: 'owner',
       }),
     });
@@ -77,9 +94,8 @@ async function run() {
     assert.strictEqual(data.success, true);
     assert.strictEqual(data.user.role, 'owner');
 
-    const setCookie = res.headers.get('set-cookie');
-    assert(setCookie && setCookie.includes('cyatra_session'), 'Expected cyatra_session cookie');
-    ownerCookie = setCookie.split(';')[0];
+    ownerCookie = extractSessionCookie(res);
+    assert(ownerCookie && ownerCookie.startsWith('cyatra_session='), 'Expected cyatra_session cookie');
   });
 
   // Test 3: Owner Role Permissions
@@ -114,8 +130,8 @@ async function run() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        email: 'admin@cyatra.com',
-        password: 'Admin@123',
+        email: ADMIN_EMAIL,
+        password: ADMIN_PASSWORD,
         portalType: 'admin',
       }),
     });
@@ -124,8 +140,8 @@ async function run() {
     assert.strictEqual(data.success, true);
     assert.strictEqual(data.user.role, 'admin');
 
-    const setCookie = res.headers.get('set-cookie');
-    adminCookie = setCookie.split(';')[0];
+    adminCookie = extractSessionCookie(res);
+    assert(adminCookie && adminCookie.startsWith('cyatra_session='), 'Expected cyatra_session cookie');
   });
 
   // Test 5: Dynamic Categories CRUD by Admin

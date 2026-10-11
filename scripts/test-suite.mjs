@@ -1,6 +1,11 @@
 import assert from 'assert';
 import fs from 'fs';
 import path from 'path';
+import dotenv from 'dotenv';
+import ws from 'ws';
+
+dotenv.config({ path: path.resolve(process.cwd(), '.env.local') });
+dotenv.config();
 
 // Load local database service directly for headless API & DAL tests
 import {
