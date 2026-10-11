@@ -98,7 +98,7 @@ export default function OwnerDashboardPage() {
       <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-2xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
           {/* C-Yatra original logo on the left */}
-          <div className="flex items-center">
+          <div className="flex items-center shrink-0">
             <CatraLogo size="sm" priority />
           </div>
 

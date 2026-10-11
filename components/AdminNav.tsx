@@ -27,8 +27,8 @@ export function AdminNav() {
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-18 flex items-center justify-between">
         {/* Left: Brand Logo + Admin Badge */}
-        <div className="flex items-center gap-3">
-          <Link href="/admin/portals" className="flex items-center gap-2">
+        <div className="flex items-center gap-3 shrink-0">
+          <Link href="/admin/portals" className="flex items-center gap-2 shrink-0">
             <CatraLogo size="sm" priority />
           </Link>
           <span className="hidden sm:inline-flex items-center px-2 py-0.5 rounded-md bg-slate-900 text-white text-[11px] font-semibold uppercase tracking-wider">
