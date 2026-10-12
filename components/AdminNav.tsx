@@ -63,7 +63,7 @@ export function AdminNav() {
         {/* Right: View Owner Portal & Logout */}
         <div className="flex items-center gap-2 sm:gap-3">
           <Link
-            href="/dashboard"
+            href="/dashboard?view=owner"
             target="_blank"
             className="hidden md:inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-[#E11D2A] font-medium transition-colors px-2 py-1"
             title="Preview Owner Dashboard in new tab"

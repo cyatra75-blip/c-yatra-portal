@@ -4,8 +4,21 @@ import './globals.css';
 export const metadata: Metadata = {
   title: 'C-Yatra — Travel Booking Portals',
   description: 'Quick access to all your verified third-party travel booking portals in one place.',
+  manifest: '/manifest.json',
   icons: {
-    icon: '/images/logo.png',
+    icon: [
+      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+    ],
+    shortcut: '/favicon-32x32.png',
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'C-Yatra',
   },
 };
 

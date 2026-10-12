@@ -13,8 +13,8 @@ export function middleware(request: NextRequest) {
     try {
       const [base64] = sessionCookie.split('.');
       if (base64) {
-        // Base64 decode safely in edge runtime
-        const decoded = atob(base64);
+        // Base64 decode safely in edge runtime with URI decoding
+        const decoded = atob(decodeURIComponent(base64));
         sessionUser = JSON.parse(decoded);
       }
     } catch {
@@ -36,12 +36,16 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
-  // 2. Protect Owner Dashboard
+  // 2. Protect Owner Dashboard & redirect Admin to Admin Console unless explicitly previewing
   if (pathname.startsWith('/dashboard')) {
     if (!isAuthenticated) {
       const loginUrl = new URL('/login', request.url);
       loginUrl.searchParams.set('redirect', pathname);
       return NextResponse.redirect(loginUrl);
+    }
+    // If admin lands on /dashboard without ?view=owner, redirect them straight to /admin/portals
+    if (isAdmin && request.nextUrl.searchParams.get('view') !== 'owner') {
+      return NextResponse.redirect(new URL('/admin/portals', request.url));
     }
   }
 
@@ -59,12 +63,18 @@ export function middleware(request: NextRequest) {
   }
 
   // 4. Redirect already logged-in users away from login pages
-  if (pathname === '/login' && isAuthenticated && !isAdmin) {
+  if (pathname === '/login' && isAuthenticated) {
+    if (isAdmin) {
+      return NextResponse.redirect(new URL('/admin/portals', request.url));
+    }
     return NextResponse.redirect(new URL('/dashboard', request.url));
   }
 
-  if (pathname === '/admin/login' && isAuthenticated && isAdmin) {
-    return NextResponse.redirect(new URL('/admin/portals', request.url));
+  if (pathname === '/admin/login' && isAuthenticated) {
+    if (isAdmin) {
+      return NextResponse.redirect(new URL('/admin/portals', request.url));
+    }
+    return NextResponse.redirect(new URL('/dashboard', request.url));
   }
 
   return NextResponse.next();

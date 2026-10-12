@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { CatraLogo } from '@/components/CatraLogo';
 import { HeroBanner } from '@/components/HeroBanner';
@@ -32,6 +33,13 @@ export default function OwnerDashboardPage() {
         if (meRes.ok) {
           const meData = await meRes.json();
           setUserProfile(meData.user);
+          if (meData.user?.role === 'admin') {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('view') !== 'owner') {
+              router.push('/admin/portals');
+              return;
+            }
+          }
         }
 
         // Fetch active categories
@@ -94,6 +102,25 @@ export default function OwnerDashboardPage() {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col">
+      {/* Admin Preview Banner (visible when admin previews owner dashboard) */}
+      {userProfile?.role === 'admin' && (
+        <aside aria-label="Admin Preview Mode" className="bg-slate-900 text-white px-4 py-2 text-xs flex items-center justify-between z-50 shadow-md">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span className="font-medium text-slate-200">
+              Admin Mode: You are previewing the Owner Dashboard.
+            </span>
+          </div>
+          <Link
+            href="/admin/portals"
+            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#E11D2A] hover:bg-red-700 text-white font-semibold text-xs transition-colors shadow-xs"
+          >
+            <span>Back to Admin Panel</span>
+            <ExternalLink className="w-3.5 h-3.5" />
+          </Link>
+        </aside>
+      )}
+
       {/* 1. Header (Reference Layout) */}
       <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-2xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">

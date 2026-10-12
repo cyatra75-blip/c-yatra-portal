@@ -35,8 +35,12 @@ export function OwnerLoginForm() {
         throw new Error(data.error || 'Login failed. Please check your credentials.');
       }
 
-      // Successful owner login
-      router.push('/dashboard');
+      // Check user role and route to appropriate portal
+      if (data.user?.role === 'admin') {
+        router.push('/admin/portals');
+      } else {
+        router.push('/dashboard');
+      }
       router.refresh();
     } catch (err: any) {
       setError(err.message || 'An error occurred during login');
